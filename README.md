@@ -3,45 +3,17 @@
 #### Tecnologías de persistencia - Frameworks de Persistencia - Introducción a MyBatis
 
 
-En este laboratorio, se trabajará en el desarrollo de una prueba de concepto 
+En este laboratorio, se experimentará con el framework MyBATIS para interactuar con un modelo de base de datos y hacer persistencia del modelo de Pacientes-Consultas trabajado hasta ahora. La base de datos que se utilizará tiene los siguientes parámetros:
+
+	host: desarrollo.is.escuelaing.edu.co
+	puerto: 3306
+	usuario: bdprueba
+	pwd: bdprueba
+	base de datos: bdprueba
 
 ## Parte I
 
-1. Agregue como dependencias el driver de MySQL, el driver de H2, y la librería de MyBatis:
-
-	```xml
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.36</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis</artifactId>
-            <version>3.4.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>log4j-over-slf4j</artifactId>
-            <version>1.7.2</version>
-        </dependency>
-        <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib</artifactId>
-            <version>2.2.2</version>
-        </dependency>                
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.184</version>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
-            <type>zip</type>
-        </dependency>
-    ```
+1. En el proyecto revise el Script scriptmysql.sql, y a partir del mismo haga el bosquejo del modelo relacional con el que se trabajará.
 
 2. Ubique el archivo de configuración de MyBATIS (mybatis-config.xml). Éste está en la ruta donde normalmente se ubican los archivos de configuración de aplicaciones montadas en Maven (src/main/resources). Edítelo y agregue en éste, después de la sección &lt;settings&gt; los siguientes 'typeAliases':
 
@@ -53,7 +25,112 @@ En este laboratorio, se trabajará en el desarrollo de una prueba de concepto
     </typeAliases>
 	```
 
-3. Ahora, ubique y abra la interfaz del 'mapper' que se configurará para manipular la persistecia de los objetos de tipo Paciente (PacienteMapper). A cada uno de los parámetros de los tres métodos, agruéguele una anotación de tipo @Param para asociarle -al respectivo parámetro- el nombre con el cual se referenciará desde la definción del 'mapper'. Por ejemplo, para el primer método:
+
+3. Lo primero que va a hacer es configurar un 'mapper' que permita que el framework reconstruya todos los objetos Paciente con sus detalles (EPS y Citas realizadas). Para hacer más eficiente la reconstrucción, la misma se realizará a partir de una sola sentencia SQL que relaciona los Pacientes, sus Consultas y su EPS. Ejecute esta sentencia en un cliente SQL (en las estaciones Linux está instalado EMMA), y revise qué nombre se le está asignando a cada columna del resultado:
+
+	```sql
+        select
+        
+        p.id,
+        p.tipo_id,
+        p.nombre,
+        p.fecha_nacimiento,
+
+	
+        e.nombre,
+        e.nit,
+
+        c.idCONSULTAS,
+        c.fecha_y_hora,
+        c.resumen,
+        c.costo
+  
+        
+        FROM  CM_PACIENTES as p left join CM_CONSULTAS as c on p.id=c.PACIENTES_id left join CM_EPS as e on p.eps_nit=e.nit
+	```
+
+
+4. Abra el archivo XML en el cual se definirán los parámetros para que MyBatis genere el 'mapper' de Paciente (PacienteMapper.xml). Ahora, mapee un elemento de tipo \<select> al método 'loadPacientes':
+
+	```xml
+   <select parameterType="map" id="loadPacientes" resultMap="PacienteResult">
+   			SENTENCIA SQL
+	</select>
+	```
+
+
+3. Note que el mapeo hecho anteriormente, se indica que los detalles de a qué atributo corresponde cada columna del resultado de la consulta están en un 'resultMap' llamado "PacienteResult". En el XML del mapeo agregue un elemento de tipo &lt;resultMap&gt;, en el cual se defina, para una entidad(clase) en particular, a qué columnas estarán asociadas cada una de sus propiedades (recuerde que propiedad != atributo). La siguiente es un ejemplo del uso de la sintaxis de &lt;resultMap&gt; para la clase Maestro, la cual tiene una relación 'uno a muchos' con la clase DetalleUno y una relación 'uno a uno' con la clase DetalleDos, y donde -a la vez-, DetalleUno tiene una relación 'uno-a-uno- con DetalleDos:
+
+	```xml
+    <resultMap type='Maestro' id='MaestroResult'>
+        <id property='propiedad1' column='COLUMNA1'/>
+        <result property='propiedad2' column='COLUMNA2'/>
+        <result property='propiedad3' column='COLUMNA3'/>  
+        <collection property='propiedad4' ofType='DetalleUno'></collection>
+		<association property="propiedad5" javaType="DetalleDos"></association>      
+    </resultMap>
+
+    <resultMap type='DetalleUno' id='DetalleResult'>
+        <id property='propiedadx' column='COLUMNAX'/>
+        <result property='propiedady' column='COLUMNAY'/>
+        <result property='propiedadz' column='COLUMNAZ'/> 
+		 <association property="propiedadw" javaType="DetalleDos"></association>      
+    </resultMap>
+    
+    <resultMap type='DetalleDos' id='DetalleResult'>
+        <id property='propiedadr' column='COLUMNAR'/>
+        <result property='propiedads' column='COLUMNAS'/>
+        <result property='propiedadt' column='COLUMNAT'/>        
+    </resultMap>
+
+	```
+
+	Como observa, Para cada propiedad de la clase se agregará un elemento de tipo &lt;result&gt;, el cual, en la propiedad 'property' indicará el nombre de la propiedad, y en la columna 'column' indicará el nombre de la columna de su tabla correspondiente (en la que se hará persistente). En caso de que la columna sea una llave primaria, en lugar de 'result' se usará un elemento de tipo 'id'. Cuando la clase tiene una relación de composición con otra, se agrega un elemento de tipo &lt;association&gt;.Finalmente, observe que si la clase tiene un atributo de tipo colección (List, Set, etc), se agregará un elemento de tipo &lt;collection&gt;, indicando (en la propiedad 'ofType') de qué tipo son los elementos de la colección. En cuanto al indentificador del 'resultMap', como convención se suele utilizar el nombre del tipo de dato concatenado con 'Result' como sufijo.
+	
+	Teniendo en cuenta lo anterior, haga tres 'resultMap': uno para la clase Paciente, otro para la clase Eps, y otro para la clase Consulta.
+
+
+7. Si intenta utilizar el 'mapper' tal como está hasta ahora, se puede presentar un problema: qué pasa si las tablas a las que se les hace JOIN tienen nombres de columnas iguales?... Con esto MyBatis no tendría manera de saber a qué atributos corresponde cada una de las columnas. Para resolver esto, si usted hace un query que haga JOIN entre dos o más tablas, siempre ponga un 'alias' con un prefijo el query. Por ejemplo, si se tiene
+
+	```sql	
+	select ma.propiedad1, det.propiedad1 ....
+	```	
+
+	Se debería cambiar a:
+
+	```sql		
+	select ma.propiedad1, det.propiedad1 as detalle_propiedad1
+	```
+
+	Y posteriormente, en la 'colección' o en la 'asociación' correspondiente en el 'resultMap', indicar que las propiedades asociadas a ésta serán aquellas que tengan un determinado prefijo:
+
+
+	```xml
+    <resultMap type='Maestro' id='MaestroResult'>
+        <id property='propiedad1' column='COLUMNA1'/>
+        <result property='propiedad2' column='COLUMNA2'/>
+        <result property='propiedad3' column='COLUMNA3'/>        
+        <collection property='propiedad4' ofType='Detalle' columnPrefix='detalle_'></collection>
+    </resultMap>
+	```
+	Haga los ajustes necesarios en la consulta y en los 'resultMap' para que no haya inconsistencias de nombres.
+
+
+
+    
+
+5. Una vez haya hecho lo anterior, es necesario que en el elemento &lt;collection&gt; del maestro se agregue una propiedad que indique cual es el 'resultMap' a través del cual se podrá 'mapear' los elementos contenidos en dicha colección. Para el ejemplo anterior, como la colección contiene elementos de tipo 'Detalle', se agregará el elemento __resultMap__ con el identificador del 'resultMap' de Detalle:
+
+	```xml
+	<collection property='propiedad3' ofType='Detalle' resultMap='DetalleResult'></collection>
+	```
+
+	Teniendo en cuenta lo anterior, haga los ajustes correspondientes en la configuración para el caso del modelo de Alquiler de películas.
+
+
+
+
+5. Ahora, ubique y abra la interfaz del 'mapper' que se configurará para manipular la persistecia de los objetos de tipo Paciente (PacienteMapper). A cada uno de los parámetros de los tres métodos, agruéguele una anotación de tipo @Param para asociarle -al respectivo parámetro- el nombre con el cual se referenciará desde la definción del 'mapper'. Por ejemplo, para el primer método:
 
 	```java
 public Paciente loadPacienteById(@Param("idpaciente")int id,@Param("tipoidpaciente") String tipoid);
