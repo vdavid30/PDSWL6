@@ -19,7 +19,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
  *
  * @author hcadavid
  */
-public class SimpleView {
+public class MyBATISExample {
 
 /**
      * Método que construye una fábrica de sesiones de MyBatis a partir del

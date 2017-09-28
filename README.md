@@ -59,7 +59,7 @@ En este laboratorio, se experimentará con el framework MyBATIS para interactuar
 	```
 
 
-3. Note que el mapeo hecho anteriormente, se indica que los detalles de a qué atributo corresponde cada columna del resultado de la consulta están en un 'resultMap' llamado "PacienteResult". En el XML del mapeo agregue un elemento de tipo &lt;resultMap&gt;, en el cual se defina, para una entidad(clase) en particular, a qué columnas estarán asociadas cada una de sus propiedades (recuerde que propiedad != atributo). La siguiente es un ejemplo del uso de la sintaxis de &lt;resultMap&gt; para la clase Maestro, la cual tiene una relación 'uno a muchos' con la clase DetalleUno y una relación 'uno a uno' con la clase DetalleDos, y donde -a la vez-, DetalleUno tiene una relación 'uno-a-uno- con DetalleDos:
+5. Note que el mapeo hecho anteriormente, se indica que los detalles de a qué atributo corresponde cada columna del resultado de la consulta están en un 'resultMap' llamado "PacienteResult". En el XML del mapeo agregue un elemento de tipo &lt;resultMap&gt;, en el cual se defina, para una entidad(clase) en particular, a qué columnas estarán asociadas cada una de sus propiedades (recuerde que propiedad != atributo). La siguiente es un ejemplo del uso de la sintaxis de &lt;resultMap&gt; para la clase Maestro, la cual tiene una relación 'uno a muchos' con la clase DetalleUno y una relación 'uno a uno' con la clase DetalleDos, y donde -a la vez-, DetalleUno tiene una relación 'uno-a-uno- con DetalleDos:
 
 	```xml
     <resultMap type='Maestro' id='MaestroResult'>
@@ -116,8 +116,61 @@ En este laboratorio, se experimentará con el framework MyBATIS para interactuar
 	Haga los ajustes necesarios en la consulta y en los 'resultMap' para que no haya inconsistencias de nombres.
 
 
+8. Use el programa de prueba suministrado (MyBatisExample) para probar cómo a través del 'mapper' generado por MyBatis, se puede consultar un Cliente. 
 
-    
+	```java	
+	...
+	SqlSessionFactory sessionfact = getSqlSessionFactory();
+	SqlSession sqlss = sessionfact.openSession();
+	ClientMapper cm=sqlss.getMapper(PacienteMapper.class);
+	System.out.println(cm.loadPacientes()));
+	...
+	```
+
+## Parte II (para el Martes)
+
+1. Configure en el XML correspondiente, la operación loadPacienteById del 'mapper' PacienteMapper.
+
+	En este caso, a diferencia del método anterior (cargar todos), el método asociado al 'mapper' tiene parámetros que se deben usar en la sentencia SQL. Es decir, los parámetros 'id' y 'tipoid' de  _public Paciente loadPacienteById(int id,String tipoid);_ se debe usar en el WHERE de su correspondiente sentencia SQL. Para hacer esto tenga en cuenta:
+
+	* Agregue la anotación @Param a dicho parámetro, asociando a ésta el nombre con el que se referirá en la sentencia SQL:
+
+	```java
+		public Paciente getPaciente(@Param("idp") int id,@Param("tipoidp") String tipoid);
+	```
+
+	* Al XML (\<select>, \<insert>, etc) asociado al método del mapper, agregue la propiedad _parameterType="map"_ .
+	* Una vez hecho esto, podrá hacer referencia dentro de la sentencia SQL a estos parámetro a través de: #{idp} e #{tipoidp}
+
+2. Verifique el funcionamiento haciendo una consulta a través del 'mapper' desde MyBatisExample.
+
+3. Configure en el XML correspondiente, la operación agregarItemRentadoACliente. Verifique el funcionamiento haciendo una consulta a través del 'mapper' desde MyBatisExample.
+
+4. Configure en el XML correspondiente (en este caso ItemMapper.xml) la operación 'insertarItem(Item it). Para este tenga en cuenta:
+	* Al igual que en en los dos casos anteriores, el query estará basado en los parámetros ingrasdos (en este caso, un objeto Item). En este caso, al hacer uso de la anotación @Param, la consulta SQL se podrá componer con los atributos de dicho objeto. Por ejemplo, si al paramétro se le da como nombre ("item"): __insertarItem(@Param("item")Item it)__, en el query se podría usar #{item.id}, #{item.nombre}, #{item.descripcion}, etc. Verifique el funcionamiento haciendo una consulta a través del 'mapper' desde MyBatisExample.
+	
+5. 	Configure en el XML correspondiente (de nuevo en ItemMapper.xml) las operaciones 'consultarItem(int it) y 'consultarItems()' de ItemMapper. En este caso, tenga adicionalmente en cuenta:
+	* Para poder configurar dichas operaciones, se necesita el 'resultMap' definido en ClientMapper. Para evitar tener CODIGO REPETIDO, mueva el resultMap _ItemResult_ de ClienteMapper.xml a ItemMapper.xml. Luego, como dentro de ClienteMapper el resultMap _ItemRentadoResult_ requiere del resultMap antes movido, haga referencia al mismo usando como referencia absoluta en 'namespace' de ItemMapper.xml:
+
+	```xml	
+	<resultMap type='ItemRentado' id="ItemRentadoResult">            
+		<association ... resultMap='edu.eci.pdsw.sampleprj.dao.mybatis.mappers.ItemMapper.ItemResult'></association> 
+	</resultMap>
+	```
+	
+	Verifique el funcionamiento haciendo una consulta a través del 'mapper' desde MyBatisExample.
+
+
+
+
+
+
+
+=====
+
+
+
+
 
 5. Una vez haya hecho lo anterior, es necesario que en el elemento &lt;collection&gt; del maestro se agregue una propiedad que indique cual es el 'resultMap' a través del cual se podrá 'mapear' los elementos contenidos en dicha colección. Para el ejemplo anterior, como la colección contiene elementos de tipo 'Detalle', se agregará el elemento __resultMap__ con el identificador del 'resultMap' de Detalle:
 
@@ -238,8 +291,9 @@ Ahora, va a asociar consultas SQL a las dos operaciones restantes de la interfaz
 2. Implemente el &lt;insert&gt; para 'insertConsulta', haciendo referencia a los parámetros recibidos por el método de la interfaz (usando #{}). En este caso, dado CONSULTAS tiene una llave autogenerada, se debe agregar la propiedad 'useGeneratedKeys' en "true", y la propiedad "keyProperty" asociándole el atributo del objeto en el cual se almacenará la llave primaria generada. Por ejemplo, si el parámetro Consulta se declaró como "con":   
 
 	```java
-public void insertConsulta(@Param("con") Consulta con,@Param("pacid")int id,@Param("pactipoid")String tipoid);
+    public void insertConsulta(@Param("con") Consulta con,@Param("idp") int idPaciente,@Param("tipoidp") String tipoid,@Param("costoc") int costoconsulta);
 	```
+
 	La propiedad 'keyProperty' tendrá como valor "con.id":
 	
 	```xml
@@ -248,15 +302,3 @@ public void insertConsulta(@Param("con") Consulta con,@Param("pacid")int id,@Par
     </insert>
 	```
 3. Usando las dos operaciones del mapper (que ya quedaron configuradas), implemente el método 'registrarNuevoPaciente', el cual, como lo indica su especificación, debe registrar un nuevo paciente y sus consultas relacionadas.
-
-
-##Parte III
-
-1. Teniendo en cuenta el ejercicio anterior, revise cómo se harían las pruebas con un esquema de persistencia basado en MyBATIS. Para esto, revise cómo se configura MyBatis para usar la base de datos 'temporal' H2 (mybatis-config-h2.xml).
-2. Revise cómo a través de MyBatis se realizan las siguientes operaciones:
-
-* Inicio de sesión.
-* Commit y rollback.
-* Cierre de sesión.
-
-	Con lo anterior, integre esta solución (y complemente lo que haga falta) en el esquema de patrón DAO realizado anteriormente (es decir, implemente la fábrica concreta y sus respectivos DAOs concretos).
