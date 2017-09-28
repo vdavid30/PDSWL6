@@ -127,9 +127,7 @@ En este laboratorio, se experimentará con el framework MyBATIS para interactuar
 	...
 	```
 
-## Parte II (para el Martes)
-
-1. Configure en el XML correspondiente, la operación loadPacienteById del 'mapper' PacienteMapper.
+9. Configure en el XML correspondiente, la operación loadPacienteById del 'mapper' PacienteMapper.
 
 	En este caso, a diferencia del método anterior (cargar todos), el método asociado al 'mapper' tiene parámetros que se deben usar en la sentencia SQL. Es decir, los parámetros 'id' y 'tipoid' de  _public Paciente loadPacienteById(int id,String tipoid);_ se debe usar en el WHERE de su correspondiente sentencia SQL. Para hacer esto tenga en cuenta:
 
@@ -144,141 +142,9 @@ En este laboratorio, se experimentará con el framework MyBATIS para interactuar
 
 2. Verifique el funcionamiento haciendo una consulta a través del 'mapper' desde MyBatisExample.
 
-3. Configure en el XML correspondiente, la operación agregarItemRentadoACliente. Verifique el funcionamiento haciendo una consulta a través del 'mapper' desde MyBatisExample.
-
-4. Configure en el XML correspondiente (en este caso ItemMapper.xml) la operación 'insertarItem(Item it). Para este tenga en cuenta:
-	* Al igual que en en los dos casos anteriores, el query estará basado en los parámetros ingrasdos (en este caso, un objeto Item). En este caso, al hacer uso de la anotación @Param, la consulta SQL se podrá componer con los atributos de dicho objeto. Por ejemplo, si al paramétro se le da como nombre ("item"): __insertarItem(@Param("item")Item it)__, en el query se podría usar #{item.id}, #{item.nombre}, #{item.descripcion}, etc. Verifique el funcionamiento haciendo una consulta a través del 'mapper' desde MyBatisExample.
-	
-5. 	Configure en el XML correspondiente (de nuevo en ItemMapper.xml) las operaciones 'consultarItem(int it) y 'consultarItems()' de ItemMapper. En este caso, tenga adicionalmente en cuenta:
-	* Para poder configurar dichas operaciones, se necesita el 'resultMap' definido en ClientMapper. Para evitar tener CODIGO REPETIDO, mueva el resultMap _ItemResult_ de ClienteMapper.xml a ItemMapper.xml. Luego, como dentro de ClienteMapper el resultMap _ItemRentadoResult_ requiere del resultMap antes movido, haga referencia al mismo usando como referencia absoluta en 'namespace' de ItemMapper.xml:
-
-	```xml	
-	<resultMap type='ItemRentado' id="ItemRentadoResult">            
-		<association ... resultMap='edu.eci.pdsw.sampleprj.dao.mybatis.mappers.ItemMapper.ItemResult'></association> 
-	</resultMap>
-	```
-	
-	Verifique el funcionamiento haciendo una consulta a través del 'mapper' desde MyBatisExample.
-
-
-
-
-
-
-
-=====
-
-
-
-
-
-5. Una vez haya hecho lo anterior, es necesario que en el elemento &lt;collection&gt; del maestro se agregue una propiedad que indique cual es el 'resultMap' a través del cual se podrá 'mapear' los elementos contenidos en dicha colección. Para el ejemplo anterior, como la colección contiene elementos de tipo 'Detalle', se agregará el elemento __resultMap__ con el identificador del 'resultMap' de Detalle:
-
-	```xml
-	<collection property='propiedad3' ofType='Detalle' resultMap='DetalleResult'></collection>
-	```
-
-	Teniendo en cuenta lo anterior, haga los ajustes correspondientes en la configuración para el caso del modelo de Alquiler de películas.
-
-
-
-
-5. Ahora, ubique y abra la interfaz del 'mapper' que se configurará para manipular la persistecia de los objetos de tipo Paciente (PacienteMapper). A cada uno de los parámetros de los tres métodos, agruéguele una anotación de tipo @Param para asociarle -al respectivo parámetro- el nombre con el cual se referenciará desde la definción del 'mapper'. Por ejemplo, para el primer método:
-
-	```java
-public Paciente loadPacienteById(@Param("idpaciente")int id,@Param("tipoidpaciente") String tipoid);
-	```
-
-4. Abra el archivo XML en el cual se definirán los parámetros para que MyBatis genere el 'mapper' de Paciente (PacienteMapper.xml). Lo primero que debe hacer, es agregar un elemento de tipo &lt;resultMap&gt;, en el cual se defina, para una entidad(clase) en particular, a qué columnas estarán asociadas cada una de sus propiedades (recuerde que propiedad != atributo). La siguiente es un ejemplo del uso de la sintaxis de &lt;resultMap&gt; para la clase Maestro, la cual tiene una relación 'uno a muchos' con la clase Detalle: 
-
-	```xml
-    <resultMap type='Maestro' id='MaestroResult'>
-        <id property='propiedad1' column='COLUMNA1'/>
-        <result property='propiedad2' column='COLUMNA2'/>
-        <result property='propiedad3' column='COLUMNA3'/>        
-        <collection property='propiedad4' ofType='Detalle'></collection>
-    </resultMap>
-    <resultMap type='Detalle' id='DetalleResult'>
-        <id property='propiedadx' column='COLUMNAX'/>
-        <result property='propiedady' column='COLUMNAY'/>
-        <result property='propiedadz' column='COLUMNAZ'/>        
-    </resultMap>
-	```
-
-	Como observa, Para cada propiedad de la clase se agregará un elemento de tipo &lt;result&gt;, el cual, en la propiedad 'property' indicará el nombre de la propiedad, y en la columna 'column' indicará el nombre de la columna de su tabla correspondiente (en la que se hará persistente). En caso de que la columna sea una llave primaria, en lugar de 'result' se usará un elemento de tipo 'id'. Finalmente, observe que si la clase tiene un atributo de tipo colección (List, Set, etc), se agregará un elemento de tipo &lt;collection&gt;, indicando (en la propiedad 'ofType') de qué tipo son los elementos de la colección. En cuanto al indentificador del 'resultMap', como convención se suele utilizar el nombre del tipo de dato concatenado con 'Result' como sufijo.
-	
-	Teniendo en cuenta lo anterior, haga dos 'resultMap': uno para la clase Paciente y otro para la clase Consulta. 
-
-5. Una vez haya hecho lo anterior, es necesario que en el elemento &lt;collection&gt; del maestro se agregue una propiedad que indique cual es el 'resultMap' a través del cual se podrá 'mapear' los elementos contenidos en dicha colección. Para el ejemplo anterior, como la colección contiene elementos de tipo 'Detalle', se agregará el elemento __resultMap__ con el identificador del 'resultMap' de Detalle:
-
-	```xml
-	<collection property='propiedad3' ofType='Detalle' resultMap='DetalleResult'></collection>
-	```
-
-	Teniendo en cuenta lo anterior, haga los ajustes correspondientes en la configuración para el caso del modelo de Pacientes y Consultas.
-
-
-6. Ahora, va a asociar sentencias SQL para cada uno de los métodos de la interfaz del 'mapper' (en este caso, la interfaz PacienteMapper). Si el método a implementar es una consulta (es decir, un método que retorna un resultado), se usa un elemento de tipo &lt;select&gt;. Como identificador se usará el nombre (sólo el nombre!) del método. Por ejemplo, si se tuviera la siguiente interfaz:
-
-
-	```java
-	public List<Maestro> consultarMaestrosEspeciales(@Param("salario") int id, @Param("categoria")int cat);
-	```
-
-	Su elemento &lt;select&gt; correspondiente sería:
-
-	```xml
-    <select id='consultarMaestrosEspeciales' parameterType='map' resultMap='MaestroResult'>
-        select ma.propiedad1, ma.propiedad2, ma.propiedad3, det.propiedadx, det.propiedady, det.propiedadz from MAESTROS as ma left join DETALLES as det on ...
-        where ma.propiedad2> #{salario} and ma.propiedad3< #{categoria} 
-    </select>
-	```
-	De lo anterior, note que:
-	* En la propiedad 'parameterType' se usa 'map' dado que el método del mapper recibe más de un parámetro.
-	* En el query se hace uso de la conveción #{} para hacer referencia a los parámetros que se enviarán a través del método definido en la interfaz del mapper.
-	* La propiedad 'resultMap' tiene asociado el identificador del 'resultMap' que se haya definido para el tipo de dato que retorne la consulta.
-
-	Teniendo esto en cuenta, haga la implementación del elemento 'select' para el método 'loadPacienteById' de PacienteMapper, con la consulta correspondiente (la consulta que hace 'join' entre pacientes y consultas, usada en el ejercicio anterior).
-	
-7. Si intenta utilizar el 'mapper' tal como está hasta ahora, se puede presentar un problema: qué pasa si las tablas a las que se les hace JOIN tienen nombres de columnas iguales?... Con esto MyBatis no tendría manera de saber a qué atributos corresponde cada una de las columnas. Para resolver esto, si usted hace un query que haga JOIN entre dos o más tablas, siempre ponga un 'alias' con un prefijo el query. Por ejemplo, si se tiene
-
-	```sql	
-	select ma.propiedad1, det.propiedad1 ....
-	```	
-
-	Se debería cambiar a:
-
-	```sql		
-	select ma.propiedad1, det.propiedad1 as detalle_propiedad1
-	```
-
-	Y posteriormente, en la 'colección' o en la 'asociación' correspondiente en el 'resultMap', indicar que las propiedades asociadas a ésta serán aquellas que tengan un determinado prefijo:
-
-
-	```xml
-    <resultMap type='Maestro' id='MaestroResult'>
-        <id property='propiedad1' column='COLUMNA1'/>
-        <result property='propiedad2' column='COLUMNA2'/>
-        <result property='propiedad3' column='COLUMNA3'/>        
-        <collection property='propiedad4' ofType='Detalle' columnPrefix='detalle_'></collection>
-    </resultMap>
-	```
-
-
-8. Use el programa de prueba suministrado (MyBatisExample) para probar cómo a través del 'mapper' generado por MyBatis, se puede consultar un paciente. 
-
-	```java	
-    ...
-    SqlSessionFactory sessionfact = getSqlSessionFactory();
-    SqlSession sqlss = sessionfact.openSession();
-    PacienteMapper pedmp=sqlss.getMapper(PacienteMapper.class);
-    System.out.println(pedmp.loadPacienteById(1026585448, "cc"));
-    ...
-	```
-
 ## Parte II
 
-Ahora, va a asociar consultas SQL a las dos operaciones restantes de la interfaz de PacienteMapper: insertarPaciente e insertarConsulta. El esquema es simiar al anterior, salvo que en lugar de usar un elemento de tipo &lt;select&gt; se usará uno de tipo &lt;insert&gt;. 
+Ahora, va a asociar consultas SQL a las dos operaciones restantes de la interfaz de PacienteMapper: insertarPaciente e insertarConsulta. El esquema es similar al anterior, salvo que en lugar de usar un elemento de tipo &lt;select&gt; se usará uno de tipo &lt;insert&gt;. 
 
 1. Implemente el &lt;insert&gt; para 'insertPaciente', haciendo referencia a los parámetros recibidos por el método de la interfaz (usando #{}):
 
@@ -301,4 +167,5 @@ Ahora, va a asociar consultas SQL a las dos operaciones restantes de la interfaz
     	COMPLETAR
     </insert>
 	```
+    
 3. Usando las dos operaciones del mapper (que ya quedaron configuradas), implemente el método 'registrarNuevoPaciente', el cual, como lo indica su especificación, debe registrar un nuevo paciente y sus consultas relacionadas.
