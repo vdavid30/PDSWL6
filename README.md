@@ -11,11 +11,16 @@ En este laboratorio, se experimentará con el framework MyBATIS para interactuar
 	pwd: bdprueba
 	base de datos: bdprueba
 
+Y corresponde al siguiente modelo:
+
+![](img/PACIENTES_CONSULTAS.png)
+
+
 ## Parte I
 
-1. En el proyecto revise el Script scriptmysql.sql, y a partir del mismo haga el bosquejo del modelo relacional con el que se trabajará.
 
-2. Ubique el archivo de configuración de MyBATIS (mybatis-config.xml). Éste está en la ruta donde normalmente se ubican los archivos de configuración de aplicaciones montadas en Maven (src/main/resources). Edítelo y agregue en éste, después de la sección &lt;settings&gt; los siguientes 'typeAliases':
+
+1. Ubique el archivo de configuración de MyBATIS (mybatis-config.xml). Éste está en la ruta donde normalmente se ubican los archivos de configuración de aplicaciones montadas en Maven (src/main/resources). Edítelo y agregue en éste, después de la sección &lt;settings&gt; los siguientes 'typeAliases':
 
 	```xml
     <typeAliases>
