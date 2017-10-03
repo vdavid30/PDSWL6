@@ -16,7 +16,7 @@ Y corresponde al siguiente modelo:
 ![](img/PACIENTES_CONSULTAS.png)
 
 
-## Parte I
+## Parte I (Para el Jueves)
 
 
 
@@ -151,7 +151,7 @@ Y corresponde al siguiente modelo:
 
 2. Verifique el funcionamiento haciendo una consulta a través del 'mapper' desde MyBatisExample.
 
-## Parte II
+## Parte II - Para empezar el Jueves
 
 Ahora, va a asociar consultas SQL a las dos operaciones restantes de la interfaz de PacienteMapper: insertarPaciente e insertarConsulta. El esquema es similar al anterior, salvo que en lugar de usar un elemento de tipo &lt;select&gt; se usará uno de tipo &lt;insert&gt;. 
 
