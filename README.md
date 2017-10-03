@@ -121,14 +121,18 @@ Y corresponde al siguiente modelo:
 	Haga los ajustes necesarios en la consulta y en los 'resultMap' para que no haya inconsistencias de nombres.
 
 
-8. Use el programa de prueba suministrado (MyBatisExample) para probar cómo a través del 'mapper' generado por MyBatis, se puede consultar un Cliente. 
+8. Use el programa de prueba suministrado (MyBatisExample) para probar cómo a través del 'mapper' generado por MyBatis, se pueden consultar TODOS los Pacientes. 
 
 	```java	
 	...
 	SqlSessionFactory sessionfact = getSqlSessionFactory();
 	SqlSession sqlss = sessionfact.openSession();
-	ClientMapper cm=sqlss.getMapper(PacienteMapper.class);
-	System.out.println(cm.loadPacientes()));
+	PacienteMapper pmapper=sqlss.getMapper(PacienteMapper.class);
+	
+	List<Paciente> pacientes=pmapper.loadPacientes();
+
+	//imprimir contenido de la lista
+
 	...
 	```
 
@@ -173,4 +177,24 @@ Ahora, va a asociar consultas SQL a las dos operaciones restantes de la interfaz
     </insert>
 	```
     
-3. Usando las dos operaciones del mapper (que ya quedaron configuradas), implemente el método 'registrarNuevoPaciente', el cual, como lo indica su especificación, debe registrar un nuevo paciente y sus consultas relacionadas.
+3. Usando las dos operaciones del mapper (que ya quedaron configuradas), implemente el método 'registrarNuevoPaciente', el cual, como lo indica su especificación, debe registrar un nuevo paciente y sus consultas relacionadas. Recuerde que en este caso debe, a partir del objeto recibido, insertar primero el paciente, y luego las consultas a través de las operaciones del mapper creado anteriormente.
+En este caso tenga en cuenta que como la operación es una transacción con varias INSERCIONES, es necesario hacer 'commit' al final de la misma:
+
+	```java	
+	...
+	SqlSessionFactory sessionfact = getSqlSessionFactory();
+	SqlSession sqlss = sessionfact.openSession();
+	PacienteMapper pmapper=sqlss.getMapper(PacienteMapper.class);
+	
+	//realizar las operaciones
+	//...
+
+	//hacer commit
+	sqlSession.commit();	
+	
+	...
+	```
+
+
+
+    
