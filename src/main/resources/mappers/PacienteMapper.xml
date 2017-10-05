@@ -9,40 +9,56 @@
 
         
     <select parameterType="map" id="loadPacienteByID" resultMap="PacienteResult">
+        select
 
+            p.id,
+            p.tipo_id,
+            p.nombre,
+            p.fecha_nacimiento,
+
+            e.nombre as eps_nombre,
+            e.nit as eps_nit,
+
+            c.idCONSULTAS,
+            c.fecha_y_hora,
+            c.resumen,
+            c.costo
+
+            FROM  CM_PACIENTES as p left join CM_CONSULTAS as c on p.id=c.PACIENTES_id left join CM_EPS as e on p.eps_nit=e.nit   
+            WHERE p.id=#{idp} and p.tipo_id=#{tipoidp}
+                
     </select>
     
        
     <select parameterType="map" id="loadPacientes" resultMap="PacienteResult">
-    select
-    
-    p.id,
-    p.tipo_id,
-    p.nombre,
-    p.fecha_nacimiento,
+            select
 
+            p.id,
+            p.tipo_id,
+            p.nombre,
+            p.fecha_nacimiento,
 
-    e.nombre as eps_nombre,
-    e.nit as eps_nit,
+            e.nombre as eps_nombre,
+            e.nit as eps_nit,
 
-    c.idCONSULTAS,
-    c.fecha_y_hora,
-    c.resumen,
-    c.costo
+            c.idCONSULTAS,
+            c.fecha_y_hora,
+            c.resumen,
+            c.costo
 
-    
-    FROM  CM_PACIENTES as p left join CM_CONSULTAS as c on p.id=c.PACIENTES_id left join CM_EPS as e on p.eps_nit=e.nit      
+            FROM  CM_PACIENTES as p left join CM_CONSULTAS as c on p.id=c.PACIENTES_id left join CM_EPS as e on p.eps_nit=e.nit      
     </select>
+    
     <resultMap type="Paciente" id="PacienteResult">
         <id property="id" column="id"/>
         <result property="tipoId" column="tipo_id"/>
         <result property="nombre" column="nombre"/>
         <result property="fechaNacimiento" column="fecha_nacimiento"/>
-            <association  property="EPS_nit" javaType="Eps"></association>
-        
+            <association  property="eps" javaType="Eps"></association>        
     </resultMap>
+    
     <resultMap type="Eps" id="eps_consul" >            
-   
         <result property="nombre" column="eps_nombre"/>
     </resultMap>
+    
 </mapper>

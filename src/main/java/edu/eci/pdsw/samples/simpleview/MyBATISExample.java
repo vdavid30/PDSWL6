@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -52,6 +53,15 @@ public class MyBATISExample {
         SqlSession sqlss = sessionfact.openSession();
         PacienteMapper pmapper=sqlss.getMapper(PacienteMapper.class);
         List<Paciente> pacientes=pmapper.loadPacientes();
+        
+        /*for(Paciente pa:pacientes){
+            System.out.println(pa.getNombre());
+        }*/
+        
+        Paciente paci=pmapper.loadPacienteByID(1026585441, "CC");
+        System.out.println(paci.getNombre());
+        
+        
     }
 
     /**
@@ -62,5 +72,10 @@ public class MyBATISExample {
     public void registrarNuevoPaciente(PacienteMapper pmap, Paciente p){
         
     }
+    
+       
+        
+    
+
     
 }
