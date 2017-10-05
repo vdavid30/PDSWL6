@@ -6,6 +6,7 @@
 package edu.eci.pdsw.samples.simpleview;
 
 import edu.eci.pdsw.persistence.impl.mappers.PacienteMapper;
+import edu.eci.pdsw.samples.entities.Eps;
 import edu.eci.pdsw.samples.entities.Paciente;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,16 +53,21 @@ public class MyBATISExample {
         SqlSessionFactory sessionfact = getSqlSessionFactory();
         SqlSession sqlss = sessionfact.openSession();
         PacienteMapper pmapper=sqlss.getMapper(PacienteMapper.class);
+        
+        
+        
+        
+        //Paciente paci=pmapper.loadPacienteByID(1026585441, "CC");
+        //System.out.println(paci.getNombre());
+        Eps eps= new Eps("Compensar", "8456981");
+        Paciente pacie=new Paciente(2109950, "CC", "David Estevan Vaca Vargas", java.sql.Date.valueOf("2000-01-01"), eps);
+        registrarNuevoPaciente(pmapper,pacie);
+        
         List<Paciente> pacientes=pmapper.loadPacientes();
         
-        /*for(Paciente pa:pacientes){
-            System.out.println(pa.getNombre());
-        }*/
-        
-        Paciente paci=pmapper.loadPacienteByID(1026585441, "CC");
-        System.out.println(paci.getNombre());
-        
-        
+        for(Paciente pa:pacientes){
+             System.out.println(pa.getNombre());
+         }
     }
 
     /**
@@ -69,8 +75,8 @@ public class MyBATISExample {
      * @param pmap mapper a traves del cual se hará la operacion
      * @param p paciente a ser registrado
      */
-    public void registrarNuevoPaciente(PacienteMapper pmap, Paciente p){
-        
+    public static void registrarNuevoPaciente(PacienteMapper pmap, Paciente p){
+        pmap.insertarPaciente(p);
     }
     
        
