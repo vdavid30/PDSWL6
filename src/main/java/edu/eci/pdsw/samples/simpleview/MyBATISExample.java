@@ -6,6 +6,7 @@
 package edu.eci.pdsw.samples.simpleview;
 
 import edu.eci.pdsw.persistence.impl.mappers.PacienteMapper;
+import edu.eci.pdsw.samples.entities.Consulta;
 import edu.eci.pdsw.samples.entities.Eps;
 import edu.eci.pdsw.samples.entities.Paciente;
 import java.io.IOException;
@@ -23,6 +24,8 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
  * @author hcadavid
  */
 public class MyBATISExample {
+    public static Paciente pacie;
+    public static Consulta consul;
 
 /**
      * Método que construye una fábrica de sesiones de MyBatis a partir del
@@ -60,7 +63,8 @@ public class MyBATISExample {
         //Paciente paci=pmapper.loadPacienteByID(1026585441, "CC");
         //System.out.println(paci.getNombre());
         Eps eps= new Eps("Compensar", "8456981");
-        Paciente pacie=new Paciente(2109950, "CC", "David Estevan Vaca Vargas", java.sql.Date.valueOf("2000-01-01"), eps);
+        pacie=new Paciente(21114928, "CC", "David Vaca ", java.sql.Date.valueOf("2000-01-01"), eps);
+        consul=new Consulta(java.sql.Date.valueOf("2017-01-01"), "C mamo X2", 2500);
         registrarNuevoPaciente(pmapper,pacie);
         
         List<Paciente> pacientes=pmapper.loadPacientes();
@@ -68,6 +72,10 @@ public class MyBATISExample {
         for(Paciente pa:pacientes){
              System.out.println(pa.getNombre());
          }
+        
+        registrarConsulta(pmapper,consul);
+        
+        sqlss.commit();
     }
 
     /**
@@ -77,8 +85,12 @@ public class MyBATISExample {
      */
     public static void registrarNuevoPaciente(PacienteMapper pmap, Paciente p){
         pmap.insertarPaciente(p);
+        pmap.insertConsulta(consul, p.getId(), p.getTipoId(), 2500);
     }
     
+    public static void registrarConsulta(PacienteMapper pmap, Consulta c){
+        pmap.insertConsulta(c, pacie.getId(), pacie.getTipoId(), 2500);
+    }
        
         
     

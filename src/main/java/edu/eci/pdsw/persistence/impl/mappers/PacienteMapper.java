@@ -21,7 +21,7 @@ public interface PacienteMapper {
     
     public void insertarPaciente(@Param("paci") Paciente p);
     
-    public void insertConsulta(Consulta con,int idPaciente, String tipoid,int costoconsulta);
+    public void insertConsulta(@Param("con") Consulta con,@Param("idp") int idPaciente,@Param("tipoidp") String tipoid,@Param("costoc") int costoconsulta);
         
 
 

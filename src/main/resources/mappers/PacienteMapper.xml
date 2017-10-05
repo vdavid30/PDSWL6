@@ -64,8 +64,12 @@
     
     <insert id="insertarPaciente" parameterType="map">
 	INSERT INTO CM_PACIENTES(id,tipo_id,nombre,fecha_nacimiento,EPS_nit) 
-        VALUES (#{paci.id},#{paci.tipoId},#{paci.nombre},#{paci.fechaNacimiento},#{paci.eps.nit})
-        
+        VALUES (#{paci.id},#{paci.tipoId},#{paci.nombre},#{paci.fechaNacimiento},#{paci.eps.nit})        
+    </insert>
+    
+    <insert id="insertConsulta" useGeneratedKeys="true" keyProperty="con.id">
+	INSERT INTO CM_CONSULTAS(idCONSULTAS,fecha_y_hora,resumen,costo,PACIENTES_id,PACIENTES_tipo_id)
+        VALUES (#{con.id},#{con.fechayHora},#{con.resumen},#{costoc},#{idp},#{tipoidp})
     </insert>
     
 </mapper>
