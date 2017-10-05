@@ -14,7 +14,7 @@
     
        
     <select parameterType="map" id="loadPacientes" resultMap="PacienteResult">
-            select
+    select
     
     p.id,
     p.tipo_id,
@@ -38,11 +38,11 @@
         <result property="tipoId" column="tipo_id"/>
         <result property="nombre" column="nombre"/>
         <result property="fechaNacimiento" column="fecha_nacimiento"/>
-        <assosiaton  property="EPS_nit" javaType="eps_consul"/>
+            <association  property="EPS_nit" javaType="Eps"></association>
         
     </resultMap>
-    <resultMap id="eps_consul" type="Eps">            
-        <id property="nit" column="eps_nit"/>
+    <resultMap type="Eps" id="eps_consul" >            
+   
         <result property="nombre" column="eps_nombre"/>
     </resultMap>
 </mapper>

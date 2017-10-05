@@ -47,7 +47,13 @@ public class Paciente {
 
     public Paciente(){
     }
-
+    public int getEPS_nit(){
+        int nNit = Integer.parseInt(eps.getNit());
+        return nNit;
+    }
+    public void setEPS_nit(String epsN){
+        eps.setNit(epsN);
+    }
     public int getId(){
         return id;
     }
