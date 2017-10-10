@@ -5,7 +5,7 @@
   
 <mapper namespace="edu.eci.pdsw.persistence.impl.mappers.EpsMapper">
     
-    <select parameterType="map" id="loadPacienteByID" resultMap="eps_consul">
+    <select parameterType="map" id="loadALLEPS" resultMap="eps_consul">
         select
         nombre,
         nit
