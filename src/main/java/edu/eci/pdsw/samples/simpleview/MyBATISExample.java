@@ -5,7 +5,7 @@
  */
 package edu.eci.pdsw.samples.simpleview;
 
-import edu.eci.pdsw.persistence.impl.mappers.PacienteMapper;
+import edu.eci.pdsw.persistence.impl.mappers.*;
 import edu.eci.pdsw.samples.entities.Consulta;
 import edu.eci.pdsw.samples.entities.Eps;
 import edu.eci.pdsw.samples.entities.Paciente;
@@ -55,23 +55,26 @@ public class MyBATISExample {
     public static void main(String args[]) throws SQLException {
         SqlSessionFactory sessionfact = getSqlSessionFactory();
         SqlSession sqlss = sessionfact.openSession();
-        PacienteMapper pmapper=sqlss.getMapper(PacienteMapper.class);
+        EPSMapper pmapper=sqlss.getMapper(EPSMapper.class);
         
         
         
-        
+        List<Eps> epss = pmapper.loadAllEPS();
+        for(Eps e: epss){
+            System.out.println(e.getNombre());
+        }
         //Paciente paci=pmapper.loadPacienteByID(1026585441, "CC");
         //System.out.println(paci.getNombre());
-        Eps eps= new Eps("Compensar", "8456981");
-        pacie=new Paciente(21114928, "CC", "David Vaca ", java.sql.Date.valueOf("2000-01-01"), eps);
-        consul=new Consulta(java.sql.Date.valueOf("2017-01-01"), "C mamo X2", 2500);
+        //Eps eps= new Eps("Compensar", "8456981");
+        //pacie=new Paciente(2109951, "CC", "Estevan Vargas ", java.sql.Date.valueOf("2000-01-01"), eps);
+        //consul=new Consulta(java.sql.Date.valueOf("2017-01-01"), "C mamo X2", 2500);
         //registrarNuevoPaciente(pmapper,pacie);
         
-        List<Paciente> pacientes=pmapper.loadPacientes();
+        //List<Paciente> pacientes=pmapper.loadPacientes();
         
-        for(Paciente pa:pacientes){
-             System.out.println(pa.getNombre());
-         }
+        //for(Paciente pa:pacientes){
+          //   System.out.println(pa.getNombre());
+         //}
         
         //registrarConsulta(pmapper,consul);
         
@@ -99,7 +102,7 @@ public class MyBATISExample {
      * @param p paciente a ser registrado
      */
     public void actualizarPaciente(PacienteMapper pmap, Paciente p){
-        pmap.
+        pmap.actualizarPaciente(p);
     }
     
 
