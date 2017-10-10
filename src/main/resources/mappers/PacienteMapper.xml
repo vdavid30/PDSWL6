@@ -72,4 +72,9 @@
         VALUES (#{con.id},#{con.fechayHora},#{con.resumen},#{costoc},#{idp},#{tipoidp})
     </insert>
     
+    <update id="actualizarPaciente" parameterType="map">
+        UPDATE INTO CM_PACIENTES
+        SET id =#{paci.id}, tipo_id=#{paci.tipoId},nombre=#{paci.nombre},fecha_nacimiento=#{paci.fechaNacimiento},EPS_nit=#{paci.eps.nit}
+    </update>
+    
 </mapper>

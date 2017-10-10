@@ -65,7 +65,7 @@ public class MyBATISExample {
         Eps eps= new Eps("Compensar", "8456981");
         pacie=new Paciente(21114928, "CC", "David Vaca ", java.sql.Date.valueOf("2000-01-01"), eps);
         consul=new Consulta(java.sql.Date.valueOf("2017-01-01"), "C mamo X2", 2500);
-        registrarNuevoPaciente(pmapper,pacie);
+        //registrarNuevoPaciente(pmapper,pacie);
         
         List<Paciente> pacientes=pmapper.loadPacientes();
         
@@ -73,7 +73,7 @@ public class MyBATISExample {
              System.out.println(pa.getNombre());
          }
         
-        registrarConsulta(pmapper,consul);
+        //registrarConsulta(pmapper,consul);
         
         sqlss.commit();
     }
@@ -92,7 +92,15 @@ public class MyBATISExample {
         pmap.insertConsulta(c, pacie.getId(), pacie.getTipoId(), 2500);
     }
        
-        
+    /**
+     * @obj Actualizar los datos básicos del paciente, con sus * respectivas consultas.
+     * @pre El paciente p ya existe
+     * @param pmap mapper a traves del cual se hará la operacion
+     * @param p paciente a ser registrado
+     */
+    public void actualizarPaciente(PacienteMapper pmap, Paciente p){
+        pmap.
+    }
     
 
     
