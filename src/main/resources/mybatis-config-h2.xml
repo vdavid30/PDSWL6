@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    
+    <settings>
+        <setting name="logImpl" value="LOG4J"/>        
+    </settings>
+    
+    <typeAliases>
+        <typeAlias type='edu.eci.pdsw.samples.entities.Paciente' alias='Paciente'/>
+        <typeAlias type='edu.eci.pdsw.samples.entities.Consulta' alias='Consulta'/>
+        <typeAlias type='edu.eci.pdsw.samples.entities.Eps' alias='Eps'/>
+    </typeAliases>
+                         
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC" />
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver" />
+                <property name="url" value="jdbc:mysql://desarrollo.is.escuelaing.edu.co:3306/bdprueba" />
+                <property name="username" value="bdprueba" />
+                <property name="password" value="bdprueba" />
+            </dataSource>
+        </environment>
+    </environments>
+        
+    <mappers>
+        <mapper resource="mappers/PacienteMapper.xml"></mapper>       
+        <mapper resource="mappers/EpsMapper.xml"></mapper>         
+    </mappers> 
+        <!-- Sólo cambiar esta sección-->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC" />
+            <dataSource type="POOLED">
+                <property name="driver" value="org.h2.Driver" />
+                <property name="url" value="jdbc:h2:file:./target/db/testdb;MODE=MYSQL" />
+                <property name="username" value="anonymous" />
+                <property name="password" value="" />
+            </dataSource>
+        </environment>
+    </environments>
+        
+        
+</configuration>
