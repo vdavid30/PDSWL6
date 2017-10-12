@@ -2,6 +2,8 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/832d04ea22b14dcf9d6762841d5440ac)](https://www.codacy.com/app/vdavid30/PDSWL6?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=vdavid30/PDSWL6&amp;utm_campaign=Badge_Grade)
 
+[![CircleCI](https://circleci.com/gh/vdavid30/PDSWL6.svg?style=svg)](https://circleci.com/gh/vdavid30/PDSWL6)
+
 ### Escuela Colombiana de Ingeniería
 ### Procesos de desarrollo de Software - PDSW
 #### Tecnologías de persistencia - Frameworks de Persistencia - Introducción a MyBatis
