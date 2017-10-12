@@ -6,4 +6,4 @@ deployment:
   staging:
     branch: master
     heroku: 
-      appname: PDSWL6
+      appname: sexto-laboratorio
