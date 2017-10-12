@@ -55,7 +55,7 @@ public class MyBATISExample {
     public static void main(String args[]) throws SQLException {
         SqlSessionFactory sessionfact = getSqlSessionFactory();
         SqlSession sqlss = sessionfact.openSession();
-        EPSMapper pmapper=sqlss.getMapper(EPSMapper.class);
+        EpsMapper pmapper=sqlss.getMapper(EpsMapper.class);
         
         
         

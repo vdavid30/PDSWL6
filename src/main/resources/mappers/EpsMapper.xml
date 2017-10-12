@@ -5,15 +5,15 @@
   
 <mapper namespace="edu.eci.pdsw.persistence.impl.mappers.EpsMapper">
     
-    <select parameterType="map" id="loadALLEPS" resultMap="eps_consul">
+    <select parameterType="map" id="loadAllEPS" resultMap="eps_consul">
         select
-        nombre,
+        nombre AS eps_nombre,
         nit
         FROM CM_EPS
     </select>
     <resultMap type="Eps" id="eps_consul" >            
-        <result property="nombre" column="eps_nombre"/>
         <id property="nit" column="nit"/>
+        <result property="nombre" column="eps_nombre"/>       
     </resultMap>
         
   

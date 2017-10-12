@@ -18,6 +18,6 @@ import org.apache.ibatis.annotations.Param;
  *
  * @author 2114928
  */
-public interface EPSMapper {
+public interface EpsMapper {
     public List<Eps> loadAllEPS();
 }
