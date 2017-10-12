@@ -5,7 +5,8 @@
  */
 package edu.eci.pdsw.samples.simpleview;
 
-import edu.eci.pdsw.persistence.impl.mappers.*;
+import edu.eci.pdsw.persistence.mybatis.mappers.EpsMapper;
+import edu.eci.pdsw.persistence.mybatis.mappers.PacienteMapper;
 import edu.eci.pdsw.samples.entities.Consulta;
 import edu.eci.pdsw.samples.entities.Eps;
 import edu.eci.pdsw.samples.entities.Paciente;

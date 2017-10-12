@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3c.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f = "http://java.sun.com/jsf/core">
+    <h:head></h:head>
+    <h1>Registro de Pacientes</h1>
+
+
+
+
+    <h:body>         
+        <h:form id="tabla">
+            <p:dataTable  id="tablaPacientes" var="paciente" value="#{HistorialPacientes.listaPacientes}" 
+                          selectionMode="single" selection="#{HistorialPacientes.paciPivote}" rowKey="#{paciente.getId()}">                
+                <p:column headerText="Numero Identificacion Paciente">
+                    <h:outputText value ="#{paciente.getId()}"/>                                         
+                </p:column>                
+                <p:column headerText="Tipo de Identificacion">
+                    <h:outputText value ="#{paciente.getTipoId()}"/>
+                </p:column>    
+                <p:column headerText="Nombre del Paciente">
+                    <h:outputText value ="#{paciente.getNombre()}"/>                                         
+                </p:column>  
+                <p:column headerText="Fecha de Nacimiento">
+                    <h:outputText value ="#{paciente.getFechaNacimiento()}"/>                                         
+                </p:column>     
+                <p:column headerText="EPS">
+                    <h:outputText value ="#{paciente.getEps().getNombre()}"/>                                         
+                </p:column>     
+            </p:dataTable>          
+        </h:form>
+        <h:form id="Botones">
+            <p:outputLabel value=" Numero de identificacion del paciente: "></p:outputLabel>
+            <p:inputText value="#{HistorialPacientes.nID}"></p:inputText>
+            <p:outputLabel value=" Tipo de Documento del Paciente: "></p:outputLabel>            
+            <p:inputText value="#{HistorialPacientes.documenType}"></p:inputText>
+            <h3></h3>
+            <p:outputLabel value=" Nombre del Paciente: "></p:outputLabel>
+            <p:inputText value="#{HistorialPacientes.name}"></p:inputText>
+            <p:outputLabel value=" Fecha de Nacimiento del Paciente: "></p:outputLabel>
+            <p:inputText value="#{HistorialPacientes.date}"></p:inputText>     
+            <h3></h3>
+            <p:outputLabel for="epsPaci" value="EPS: " />
+            <p:selectOneMenu id="epsPaci" value="#{HistorialPacientes.nombreEps}" style="width:140px">
+                <f:selectItems value="#{HistorialPacientes.nombresEps}"/>
+            </p:selectOneMenu>
+            <h3></h3>
+            <p:commandButton value="Agregar Nuevo Paciente" update=":tabla" actionListener="#{HistorialPacientes.registrarNuevoPaciente()}"></p:commandButton> 
+        </h:form>
+        <h:form>
+        <h3>Ir a consultas del paciente</h3>
+            <h:commandButton action = "registroconsultas" value = "Consultas del Paciente" actionListener="#{HistorialPacientes.seleccionarPaciente()}" />
+        </h:form>
+        <h:form> 
+        <h3> Using Managed Bean</h3>  
+        </h:form> 
+    </h:body>
+</html>

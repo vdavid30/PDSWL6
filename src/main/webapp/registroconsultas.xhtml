@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3c.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head></h:head>
+    <h:body>
+        <h1>Registro de Citas</h1>
+        <h2><h:panelGrid columns="4">
+        <h:outputLabel value="Paciente:             "/>    
+        <h:outputLabel value="#{HistorialPacientes.name}"/>  
+        <h:outputLabel value="EPS:             "/>    
+        <h:outputLabel value="#{HistorialPacientes.nombreEps}"/> 
+        </h:panelGrid> </h2>
+        <h:form id ="tabla">
+             <p:dataTable  id="tablaOrdenes" var="cons" value="#{HistorialPacientes.consultas2}">
+                 <p:column headerText="Fecha Consulta">
+                    <h:outputText value ="#{(cons.getFechayHora())}"/>
+                </p:column>       
+                <p:column headerText="Resumen">
+                    <h:outputText value ="#{(cons.getResumen())}"/>
+                </p:column>
+                 <p:column headerText="Costo">
+                    <h:outputText value ="#{(cons.getCosto())}"/>
+                </p:column>
+             </p:dataTable>  
+            <h3>Agregar nueva cita</h3>
+            <h3></h3>
+            <h:outputLabel for="Fecha" value="Fecha:    "/>
+            <p:inputText  id="fechayhora" value="#{HistorialPacientes.fechayHora}"/>
+            <h:outputLabel value="    Resumen:"/>
+            <p:inputText id="resumen" value="#{HistorialPacientes.resumen}" />
+            <h:outputLabel value="    Costo:"/>
+            <p:inputText id="costo" value="#{HistorialPacientes.costo}" />
+            
+            <h3></h3>
+            <h3></h3>
+            <p:commandButton value="Agregar Cita" id="ajax"  actionListener="#{HistorialPacientes.crearConsulta}" update="tabla" />
+        </h:form>                                
+    </h:body>
+
+</html>
+
+
