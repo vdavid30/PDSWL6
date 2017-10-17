@@ -5,10 +5,12 @@
  */
 package edu.eci.pdsw.persistence;
 
+import edu.eci.pdsw.samples.services.ExcepcionServiciosPacientes;
 import edu.eci.pdsw.samples.entities.Consulta;
 import edu.eci.pdsw.samples.entities.Paciente;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.exceptions.PersistenceException;
 
 /**
  *
@@ -24,5 +26,13 @@ public interface PacienteDAO {
     public void insertConsulta(@Param("con") Consulta con,@Param("idp") int idPaciente,@Param("tipoidp") String tipoid,@Param("costoc") int costoconsulta);
     
     public void actualizarPaciente(@Param("paci") Paciente p);
+    
+    public void actualizar(Paciente p) throws PersistenceException;
+
+	public static void agregarConsultaPaciente(String idPaciente, String tipoid, Consulta consulta,long costo) throws ExcepcionServiciosPacientes {		
+	}
+	
+	public void agregarConsultaPaciente(String idPaciente, String tipoid, Consulta consulta) throws ExcepcionServiciosPacientes;
+
     
 }
